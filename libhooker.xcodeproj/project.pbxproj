@@ -1,0 +1,1530 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F1243178240DEECC006439CC /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1243176240DEECC006439CC /* Interface.storyboard */; };
+		F1243181240DEECD006439CC /* libhooker-watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F1243180240DEECD006439CC /* libhooker-watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F1243190240DEECE006439CC /* libhooker-watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F1243174240DEECC006439CC /* libhooker-watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F124319E240DF0B2006439CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F124319D240DF0B2006439CC /* Assets.xcassets */; };
+		F12431A6240DF0CD006439CC /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F12431A0240DF0CD006439CC /* ExtensionDelegate.m */; };
+		F12431A7240DF0CD006439CC /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F12431A2240DF0CD006439CC /* InterfaceController.m */; };
+		F12431A8240DF0CD006439CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F12431A3240DF0CD006439CC /* Assets.xcassets */; };
+		F14CFD262502EE3C003D6C4F /* shadowMem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F14CFD252502EE3C003D6C4F /* shadowMem.cpp */; };
+		F14CFD282502F9CD003D6C4F /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F14CFD272502F9CD003D6C4F /* libc++.tbd */; };
+		F14F2DFB240139C400F4BD27 /* as-aarch64.c in Sources */ = {isa = PBXBuildFile; fileRef = F14F2DFA240139C400F4BD27 /* as-aarch64.c */; };
+		F14F2DFF2403DEE700F4BD27 /* funcHook.c in Sources */ = {isa = PBXBuildFile; fileRef = F14F2DFE2403DEE700F4BD27 /* funcHook.c */; };
+		F15A4A332487ACD500104B38 /* machWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = F15A4A322487ACD500104B38 /* machWrapper.c */; };
+		F1686EDD2400BAC600DBDE02 /* disas-aarch64.c in Sources */ = {isa = PBXBuildFile; fileRef = F1686EDC2400BAC600DBDE02 /* disas-aarch64.c */; };
+		F16DE2E425C63625002B0A52 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DE2E325C63625002B0A52 /* libc++.tbd */; };
+		F16DE2EC25C63630002B0A52 /* shadowMem.c in Sources */ = {isa = PBXBuildFile; fileRef = F14CFD292503022D003D6C4F /* shadowMem.c */; };
+		F16DE32025C63798002B0A52 /* shadowMem.c in Sources */ = {isa = PBXBuildFile; fileRef = F14CFD292503022D003D6C4F /* shadowMem.c */; };
+		F16DE32125C63798002B0A52 /* funcHook.c in Sources */ = {isa = PBXBuildFile; fileRef = F14F2DFE2403DEE700F4BD27 /* funcHook.c */; };
+		F16DE32225C63798002B0A52 /* shadowMem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F14CFD252502EE3C003D6C4F /* shadowMem.cpp */; };
+		F16DE32325C63798002B0A52 /* dyldSyms.c in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F332308C08000EECCAE /* dyldSyms.c */; };
+		F16DE32425C63798002B0A52 /* disas-aarch64.c in Sources */ = {isa = PBXBuildFile; fileRef = F1686EDC2400BAC600DBDE02 /* disas-aarch64.c */; };
+		F16DE32525C63798002B0A52 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FE3AD62404D57B00084AE4 /* misc.c */; };
+		F16DE32625C63798002B0A52 /* writeMem-darwin.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FCE82123F4056E00B0F396 /* writeMem-darwin.c */; };
+		F16DE32725C63798002B0A52 /* as-aarch64.c in Sources */ = {isa = PBXBuildFile; fileRef = F14F2DFA240139C400F4BD27 /* as-aarch64.c */; };
+		F16DE32825C63798002B0A52 /* machWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = F15A4A322487ACD500104B38 /* machWrapper.c */; };
+		F16DE37925C637D5002B0A52 /* objc.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FE3ACE2404AB8C00084AE4 /* objc.c */; };
+		F16DE39A25C6380B002B0A52 /* libblackjack (watchOS).a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DE37F25C637D5002B0A52 /* libblackjack (watchOS).a */; };
+		F16DE39B25C6380B002B0A52 /* libhooker (watchOS).a in Frameworks */ = {isa = PBXBuildFile; fileRef = F16DE32E25C63798002B0A52 /* libhooker (watchOS).a */; };
+		F1D82F342308C08000EECCAE /* dyldSyms.c in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F332308C08000EECCAE /* dyldSyms.c */; };
+		F1D82F422308C7A000EECCAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F412308C7A000EECCAE /* AppDelegate.m */; };
+		F1D82F452308C7A000EECCAE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F442308C7A000EECCAE /* ViewController.m */; };
+		F1D82F482308C7A000EECCAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1D82F462308C7A000EECCAE /* Main.storyboard */; };
+		F1D82F4A2308C7A100EECCAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1D82F492308C7A100EECCAE /* Assets.xcassets */; };
+		F1D82F4D2308C7A100EECCAE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1D82F4B2308C7A100EECCAE /* LaunchScreen.storyboard */; };
+		F1D82F502308C7A100EECCAE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F4F2308C7A100EECCAE /* main.m */; };
+		F1D82F5A2308C7A100EECCAE /* libhooker_testTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F592308C7A100EECCAE /* libhooker_testTests.m */; };
+		F1D82F652308C7A100EECCAE /* libhooker_testUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D82F642308C7A100EECCAE /* libhooker_testUITests.m */; };
+		F1D82F712308C7B600EECCAE /* libhooker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D82F252308BF3000EECCAE /* libhooker.a */; };
+		F1E1689226EB8F0200D2C62D /* dyld4Find.c in Sources */ = {isa = PBXBuildFile; fileRef = F1E1689026EB822300D2C62D /* dyld4Find.c */; };
+		F1E1689326EB8F0600D2C62D /* dyld4Find.c in Sources */ = {isa = PBXBuildFile; fileRef = F1E1689026EB822300D2C62D /* dyld4Find.c */; };
+		F1FCE82223F4056E00B0F396 /* writeMem-darwin.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FCE82123F4056E00B0F396 /* writeMem-darwin.c */; };
+		F1FE3ACF2404AB8C00084AE4 /* objc.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FE3ACE2404AB8C00084AE4 /* objc.c */; };
+		F1FE3AD22404AC9500084AE4 /* libblackjack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1FE3AC224049D4C00084AE4 /* libblackjack.a */; };
+		F1FE3AD72404D57B00084AE4 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = F1FE3AD62404D57B00084AE4 /* misc.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F1243182240DEECD006439CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F124317F240DEECD006439CC;
+			remoteInfo = "libhooker-watch Extension";
+		};
+		F124318E240DEECE006439CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1243173240DEECC006439CC;
+			remoteInfo = "libhooker-watch";
+		};
+		F16DE39225C637FD002B0A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F16DE37725C637D5002B0A52;
+			remoteInfo = "blackjack (watchOS)";
+		};
+		F16DE39425C637FD002B0A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F16DE31E25C63798002B0A52;
+			remoteInfo = "hooker (watchOS)";
+		};
+		F16DE39625C63804002B0A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F16DE37725C637D5002B0A52;
+			remoteInfo = "blackjack (watchOS)";
+		};
+		F16DE39825C63804002B0A52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F16DE31E25C63798002B0A52;
+			remoteInfo = "hooker (watchOS)";
+		};
+		F1D82F562308C7A100EECCAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1D82F3D2308C7A000EECCAE;
+			remoteInfo = "libhooker-test";
+		};
+		F1D82F612308C7A100EECCAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1D82F3D2308C7A000EECCAE;
+			remoteInfo = "libhooker-test";
+		};
+		F1D82F722308C7BB00EECCAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1D82F242308BF3000EECCAE;
+			remoteInfo = libhooker;
+		};
+		F1FE3AD02404AC9000084AE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1D82F1D2308BF3000EECCAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1FE3AC124049D4C00084AE4;
+			remoteInfo = libblackjack;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F1243194240DEECE006439CC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F1243181240DEECD006439CC /* libhooker-watch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1243198240DEECE006439CC /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				F1243190240DEECE006439CC /* libhooker-watch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE32A25C63798002B0A52 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE37B25C637D5002B0A52 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F232308BF3000EECCAE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1FE3AC024049D4C00084AE4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F1243174240DEECC006439CC /* libhooker-watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "libhooker-watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1243177240DEECC006439CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		F124317B240DEECD006439CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1243180240DEECD006439CC /* libhooker-watch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "libhooker-watch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F124319D240DF0B2006439CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F124319F240DF0CD006439CC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F12431A0240DF0CD006439CC /* ExtensionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionDelegate.m; sourceTree = "<group>"; };
+		F12431A1240DF0CD006439CC /* ExtensionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
+		F12431A2240DF0CD006439CC /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		F12431A3240DF0CD006439CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F12431A4240DF0CD006439CC /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
+		F129793023F02D9C00DC522F /* libhooker_panic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libhooker_panic.h; sourceTree = "<group>"; };
+		F14CFD232502EDC7003D6C4F /* shadowMem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shadowMem.h; sourceTree = "<group>"; };
+		F14CFD252502EE3C003D6C4F /* shadowMem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shadowMem.cpp; sourceTree = "<group>"; };
+		F14CFD272502F9CD003D6C4F /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.5.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
+		F14CFD292503022D003D6C4F /* shadowMem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = shadowMem.c; sourceTree = "<group>"; };
+		F14F2DF9240139C300F4BD27 /* as-aarch64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "as-aarch64.h"; sourceTree = "<group>"; };
+		F14F2DFA240139C400F4BD27 /* as-aarch64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "as-aarch64.c"; sourceTree = "<group>"; };
+		F14F2DFD2403DEE700F4BD27 /* funcHook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = funcHook.h; sourceTree = "<group>"; };
+		F14F2DFE2403DEE700F4BD27 /* funcHook.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = funcHook.c; sourceTree = "<group>"; };
+		F15A4A312487ACD500104B38 /* machWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = machWrapper.h; sourceTree = "<group>"; };
+		F15A4A322487ACD500104B38 /* machWrapper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = machWrapper.c; sourceTree = "<group>"; };
+		F1686EDB2400BAC600DBDE02 /* disas-aarch64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "disas-aarch64.h"; sourceTree = "<group>"; };
+		F1686EDC2400BAC600DBDE02 /* disas-aarch64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "disas-aarch64.c"; sourceTree = "<group>"; };
+		F16DE2E325C63625002B0A52 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/WatchOS.platform/Developer/SDKs/WatchOS7.1.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
+		F16DE32E25C63798002B0A52 /* libhooker (watchOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libhooker (watchOS).a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F16DE37F25C637D5002B0A52 /* libblackjack (watchOS).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libblackjack (watchOS).a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D82F252308BF3000EECCAE /* libhooker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhooker.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D82F322308C08000EECCAE /* dyldSyms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyldSyms.h; sourceTree = "<group>"; };
+		F1D82F332308C08000EECCAE /* dyldSyms.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dyldSyms.c; sourceTree = "<group>"; };
+		F1D82F352308C10900EECCAE /* dyld_cache_format.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyld_cache_format.h; sourceTree = "<group>"; };
+		F1D82F382308C1B700EECCAE /* shared_region.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shared_region.h; sourceTree = "<group>"; };
+		F1D82F3E2308C7A000EECCAE /* libhooker-test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "libhooker-test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D82F402308C7A000EECCAE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F1D82F412308C7A000EECCAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F1D82F432308C7A000EECCAE /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F1D82F442308C7A000EECCAE /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F1D82F472308C7A000EECCAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F1D82F492308C7A100EECCAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F1D82F4C2308C7A100EECCAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F1D82F4E2308C7A100EECCAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1D82F4F2308C7A100EECCAE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F1D82F552308C7A100EECCAE /* libhooker-testTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "libhooker-testTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D82F592308C7A100EECCAE /* libhooker_testTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libhooker_testTests.m; sourceTree = "<group>"; };
+		F1D82F5B2308C7A100EECCAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1D82F602308C7A100EECCAE /* libhooker-testUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "libhooker-testUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1D82F642308C7A100EECCAE /* libhooker_testUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libhooker_testUITests.m; sourceTree = "<group>"; };
+		F1D82F662308C7A100EECCAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1D82F742308C80D00EECCAE /* libhooker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libhooker.h; sourceTree = "<group>"; };
+		F1D82F752308C84F00EECCAE /* funcMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = funcMacros.h; sourceTree = "<group>"; };
+		F1D82F76230914AD00EECCAE /* mach_vm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
+		F1E1688F26EB822300D2C62D /* dyld4Find.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyld4Find.h; sourceTree = "<group>"; };
+		F1E1689026EB822300D2C62D /* dyld4Find.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dyld4Find.c; sourceTree = "<group>"; };
+		F1FCE82023F4056E00B0F396 /* writeMem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = writeMem.h; sourceTree = "<group>"; };
+		F1FCE82123F4056E00B0F396 /* writeMem-darwin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "writeMem-darwin.c"; sourceTree = "<group>"; };
+		F1FE3AC224049D4C00084AE4 /* libblackjack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libblackjack.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1FE3ACB24049D7400084AE4 /* libblackjack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libblackjack.h; sourceTree = "<group>"; };
+		F1FE3ACD2404AB8C00084AE4 /* objc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = objc.h; sourceTree = "<group>"; };
+		F1FE3ACE2404AB8C00084AE4 /* objc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = objc.c; sourceTree = "<group>"; };
+		F1FE3AD62404D57B00084AE4 /* misc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F124317D240DEECD006439CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F16DE39A25C6380B002B0A52 /* libblackjack (watchOS).a in Frameworks */,
+				F16DE39B25C6380B002B0A52 /* libhooker (watchOS).a in Frameworks */,
+				F16DE2E425C63625002B0A52 /* libc++.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE32925C63798002B0A52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE37A25C637D5002B0A52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F222308BF3000EECCAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F3B2308C7A000EECCAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F14CFD282502F9CD003D6C4F /* libc++.tbd in Frameworks */,
+				F1FE3AD22404AC9500084AE4 /* libblackjack.a in Frameworks */,
+				F1D82F712308C7B600EECCAE /* libhooker.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F522308C7A100EECCAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F5D2308C7A100EECCAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1FE3ABF24049D4C00084AE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F1243175240DEECC006439CC /* libhooker-watch */ = {
+			isa = PBXGroup;
+			children = (
+				F1243176240DEECC006439CC /* Interface.storyboard */,
+				F124319D240DF0B2006439CC /* Assets.xcassets */,
+				F124317B240DEECD006439CC /* Info.plist */,
+			);
+			path = "libhooker-watch";
+			sourceTree = "<group>";
+		};
+		F1243184240DEECD006439CC /* libhooker-watch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				F12431A3240DF0CD006439CC /* Assets.xcassets */,
+				F12431A1240DF0CD006439CC /* ExtensionDelegate.h */,
+				F12431A0240DF0CD006439CC /* ExtensionDelegate.m */,
+				F124319F240DF0CD006439CC /* Info.plist */,
+				F12431A4240DF0CD006439CC /* InterfaceController.h */,
+				F12431A2240DF0CD006439CC /* InterfaceController.m */,
+			);
+			path = "libhooker-watch Extension";
+			sourceTree = "<group>";
+		};
+		F14F2DF8240139AF00F4BD27 /* as-aarch64 */ = {
+			isa = PBXGroup;
+			children = (
+				F14F2DF9240139C300F4BD27 /* as-aarch64.h */,
+				F14F2DFA240139C400F4BD27 /* as-aarch64.c */,
+			);
+			path = "as-aarch64";
+			sourceTree = "<group>";
+		};
+		F14F2DFC2403DEC900F4BD27 /* func */ = {
+			isa = PBXGroup;
+			children = (
+				F14F2DFD2403DEE700F4BD27 /* funcHook.h */,
+				F14F2DFE2403DEE700F4BD27 /* funcHook.c */,
+			);
+			path = func;
+			sourceTree = "<group>";
+		};
+		F15A4A302487ACA400104B38 /* mach */ = {
+			isa = PBXGroup;
+			children = (
+				F15A4A312487ACD500104B38 /* machWrapper.h */,
+				F15A4A322487ACD500104B38 /* machWrapper.c */,
+			);
+			path = mach;
+			sourceTree = "<group>";
+		};
+		F1686ED72400B98400DBDE02 /* dyld */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F322308C08000EECCAE /* dyldSyms.h */,
+				F1D82F332308C08000EECCAE /* dyldSyms.c */,
+				F1E1688F26EB822300D2C62D /* dyld4Find.h */,
+				F1E1689026EB822300D2C62D /* dyld4Find.c */,
+			);
+			path = dyld;
+			sourceTree = "<group>";
+		};
+		F1686ED82400B99400DBDE02 /* mem */ = {
+			isa = PBXGroup;
+			children = (
+				F1FCE82023F4056E00B0F396 /* writeMem.h */,
+				F1FCE82123F4056E00B0F396 /* writeMem-darwin.c */,
+				F14CFD232502EDC7003D6C4F /* shadowMem.h */,
+				F14CFD252502EE3C003D6C4F /* shadowMem.cpp */,
+				F14CFD292503022D003D6C4F /* shadowMem.c */,
+			);
+			path = mem;
+			sourceTree = "<group>";
+		};
+		F1686ED92400B99C00DBDE02 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F362308C11100EECCAE /* apple */,
+				F1D82F742308C80D00EECCAE /* libhooker.h */,
+				F1D82F752308C84F00EECCAE /* funcMacros.h */,
+				F129793023F02D9C00DC522F /* libhooker_panic.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		F1686EDA2400BAB000DBDE02 /* disas-aarch64 */ = {
+			isa = PBXGroup;
+			children = (
+				F1686EDB2400BAC600DBDE02 /* disas-aarch64.h */,
+				F1686EDC2400BAC600DBDE02 /* disas-aarch64.c */,
+			);
+			path = "disas-aarch64";
+			sourceTree = "<group>";
+		};
+		F1D82F1C2308BF3000EECCAE = {
+			isa = PBXGroup;
+			children = (
+				F1D82F312308BF5C00EECCAE /* libhooker */,
+				F1FE3AC324049D4C00084AE4 /* libblackjack */,
+				F1D82F3F2308C7A000EECCAE /* libhooker-test */,
+				F1D82F582308C7A100EECCAE /* libhooker-testTests */,
+				F1D82F632308C7A100EECCAE /* libhooker-testUITests */,
+				F1243175240DEECC006439CC /* libhooker-watch */,
+				F1243184240DEECD006439CC /* libhooker-watch Extension */,
+				F1D82F262308BF3000EECCAE /* Products */,
+				F1D82F702308C7B600EECCAE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F1D82F262308BF3000EECCAE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F252308BF3000EECCAE /* libhooker.a */,
+				F1D82F3E2308C7A000EECCAE /* libhooker-test.app */,
+				F1D82F552308C7A100EECCAE /* libhooker-testTests.xctest */,
+				F1D82F602308C7A100EECCAE /* libhooker-testUITests.xctest */,
+				F1FE3AC224049D4C00084AE4 /* libblackjack.a */,
+				F1243174240DEECC006439CC /* libhooker-watch.app */,
+				F1243180240DEECD006439CC /* libhooker-watch Extension.appex */,
+				F16DE32E25C63798002B0A52 /* libhooker (watchOS).a */,
+				F16DE37F25C637D5002B0A52 /* libblackjack (watchOS).a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1D82F312308BF5C00EECCAE /* libhooker */ = {
+			isa = PBXGroup;
+			children = (
+				F1686ED92400B99C00DBDE02 /* include */,
+				F1FE3AD52404D56C00084AE4 /* misc */,
+				F14F2DF8240139AF00F4BD27 /* as-aarch64 */,
+				F1686EDA2400BAB000DBDE02 /* disas-aarch64 */,
+				F1686ED82400B99400DBDE02 /* mem */,
+				F1686ED72400B98400DBDE02 /* dyld */,
+				F14F2DFC2403DEC900F4BD27 /* func */,
+				F15A4A302487ACA400104B38 /* mach */,
+			);
+			path = libhooker;
+			sourceTree = "<group>";
+		};
+		F1D82F362308C11100EECCAE /* apple */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F372308C18900EECCAE /* mach */,
+				F1D82F352308C10900EECCAE /* dyld_cache_format.h */,
+			);
+			path = apple;
+			sourceTree = "<group>";
+		};
+		F1D82F372308C18900EECCAE /* mach */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F382308C1B700EECCAE /* shared_region.h */,
+				F1D82F76230914AD00EECCAE /* mach_vm.h */,
+			);
+			path = mach;
+			sourceTree = "<group>";
+		};
+		F1D82F3F2308C7A000EECCAE /* libhooker-test */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F402308C7A000EECCAE /* AppDelegate.h */,
+				F1D82F412308C7A000EECCAE /* AppDelegate.m */,
+				F1D82F432308C7A000EECCAE /* ViewController.h */,
+				F1D82F442308C7A000EECCAE /* ViewController.m */,
+				F1D82F462308C7A000EECCAE /* Main.storyboard */,
+				F1D82F492308C7A100EECCAE /* Assets.xcassets */,
+				F1D82F4B2308C7A100EECCAE /* LaunchScreen.storyboard */,
+				F1D82F4E2308C7A100EECCAE /* Info.plist */,
+				F1D82F4F2308C7A100EECCAE /* main.m */,
+			);
+			path = "libhooker-test";
+			sourceTree = "<group>";
+		};
+		F1D82F582308C7A100EECCAE /* libhooker-testTests */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F592308C7A100EECCAE /* libhooker_testTests.m */,
+				F1D82F5B2308C7A100EECCAE /* Info.plist */,
+			);
+			path = "libhooker-testTests";
+			sourceTree = "<group>";
+		};
+		F1D82F632308C7A100EECCAE /* libhooker-testUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F1D82F642308C7A100EECCAE /* libhooker_testUITests.m */,
+				F1D82F662308C7A100EECCAE /* Info.plist */,
+			);
+			path = "libhooker-testUITests";
+			sourceTree = "<group>";
+		};
+		F1D82F702308C7B600EECCAE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F16DE2E325C63625002B0A52 /* libc++.tbd */,
+				F14CFD272502F9CD003D6C4F /* libc++.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F1FE3AC324049D4C00084AE4 /* libblackjack */ = {
+			isa = PBXGroup;
+			children = (
+				F1FE3AD82404E2D900084AE4 /* include */,
+				F1FE3ACC2404AB7B00084AE4 /* objc */,
+			);
+			path = libblackjack;
+			sourceTree = "<group>";
+		};
+		F1FE3ACC2404AB7B00084AE4 /* objc */ = {
+			isa = PBXGroup;
+			children = (
+				F1FE3ACD2404AB8C00084AE4 /* objc.h */,
+				F1FE3ACE2404AB8C00084AE4 /* objc.c */,
+			);
+			path = objc;
+			sourceTree = "<group>";
+		};
+		F1FE3AD52404D56C00084AE4 /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				F1FE3AD62404D57B00084AE4 /* misc.c */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
+		F1FE3AD82404E2D900084AE4 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F1FE3ACB24049D7400084AE4 /* libblackjack.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1243173240DEECC006439CC /* libhooker-watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1243195240DEECE006439CC /* Build configuration list for PBXNativeTarget "libhooker-watch" */;
+			buildPhases = (
+				F1243172240DEECC006439CC /* Resources */,
+				F1243194240DEECE006439CC /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F16DE39325C637FD002B0A52 /* PBXTargetDependency */,
+				F16DE39525C637FD002B0A52 /* PBXTargetDependency */,
+				F1243183240DEECD006439CC /* PBXTargetDependency */,
+			);
+			name = "libhooker-watch";
+			productName = "libhooker-watch";
+			productReference = F1243174240DEECC006439CC /* libhooker-watch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		F124317F240DEECD006439CC /* libhooker-watch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1243191240DEECE006439CC /* Build configuration list for PBXNativeTarget "libhooker-watch Extension" */;
+			buildPhases = (
+				F124317C240DEECD006439CC /* Sources */,
+				F124317D240DEECD006439CC /* Frameworks */,
+				F124317E240DEECD006439CC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F16DE39725C63804002B0A52 /* PBXTargetDependency */,
+				F16DE39925C63804002B0A52 /* PBXTargetDependency */,
+			);
+			name = "libhooker-watch Extension";
+			productName = "libhooker-watch Extension";
+			productReference = F1243180240DEECD006439CC /* libhooker-watch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		F16DE31E25C63798002B0A52 /* hooker (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F16DE32B25C63798002B0A52 /* Build configuration list for PBXNativeTarget "hooker (watchOS)" */;
+			buildPhases = (
+				F16DE31F25C63798002B0A52 /* Sources */,
+				F16DE32925C63798002B0A52 /* Frameworks */,
+				F16DE32A25C63798002B0A52 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "hooker (watchOS)";
+			productName = libhooker;
+			productReference = F16DE32E25C63798002B0A52 /* libhooker (watchOS).a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F16DE37725C637D5002B0A52 /* blackjack (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F16DE37C25C637D5002B0A52 /* Build configuration list for PBXNativeTarget "blackjack (watchOS)" */;
+			buildPhases = (
+				F16DE37825C637D5002B0A52 /* Sources */,
+				F16DE37A25C637D5002B0A52 /* Frameworks */,
+				F16DE37B25C637D5002B0A52 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "blackjack (watchOS)";
+			productName = libblackjack;
+			productReference = F16DE37F25C637D5002B0A52 /* libblackjack (watchOS).a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F1D82F242308BF3000EECCAE /* hooker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D82F2E2308BF3000EECCAE /* Build configuration list for PBXNativeTarget "hooker" */;
+			buildPhases = (
+				F1D82F212308BF3000EECCAE /* Sources */,
+				F1D82F222308BF3000EECCAE /* Frameworks */,
+				F1D82F232308BF3000EECCAE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hooker;
+			productName = libhooker;
+			productReference = F1D82F252308BF3000EECCAE /* libhooker.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F1D82F3D2308C7A000EECCAE /* libhooker-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D82F672308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-test" */;
+			buildPhases = (
+				F1D82F3A2308C7A000EECCAE /* Sources */,
+				F1D82F3B2308C7A000EECCAE /* Frameworks */,
+				F1D82F3C2308C7A000EECCAE /* Resources */,
+				F1243198240DEECE006439CC /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1D82F732308C7BB00EECCAE /* PBXTargetDependency */,
+				F1FE3AD12404AC9000084AE4 /* PBXTargetDependency */,
+				F124318F240DEECE006439CC /* PBXTargetDependency */,
+			);
+			name = "libhooker-test";
+			productName = "libhooker-test";
+			productReference = F1D82F3E2308C7A000EECCAE /* libhooker-test.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F1D82F542308C7A100EECCAE /* libhooker-testTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D82F6A2308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-testTests" */;
+			buildPhases = (
+				F1D82F512308C7A100EECCAE /* Sources */,
+				F1D82F522308C7A100EECCAE /* Frameworks */,
+				F1D82F532308C7A100EECCAE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1D82F572308C7A100EECCAE /* PBXTargetDependency */,
+			);
+			name = "libhooker-testTests";
+			productName = "libhooker-testTests";
+			productReference = F1D82F552308C7A100EECCAE /* libhooker-testTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F1D82F5F2308C7A100EECCAE /* libhooker-testUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D82F6D2308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-testUITests" */;
+			buildPhases = (
+				F1D82F5C2308C7A100EECCAE /* Sources */,
+				F1D82F5D2308C7A100EECCAE /* Frameworks */,
+				F1D82F5E2308C7A100EECCAE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1D82F622308C7A100EECCAE /* PBXTargetDependency */,
+			);
+			name = "libhooker-testUITests";
+			productName = "libhooker-testUITests";
+			productReference = F1D82F602308C7A100EECCAE /* libhooker-testUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		F1FE3AC124049D4C00084AE4 /* blackjack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1FE3AC824049D4C00084AE4 /* Build configuration list for PBXNativeTarget "blackjack" */;
+			buildPhases = (
+				F1FE3ABE24049D4C00084AE4 /* Sources */,
+				F1FE3ABF24049D4C00084AE4 /* Frameworks */,
+				F1FE3AC024049D4C00084AE4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = blackjack;
+			productName = libblackjack;
+			productReference = F1FE3AC224049D4C00084AE4 /* libblackjack.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1D82F1D2308BF3000EECCAE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = CoolStar;
+				TargetAttributes = {
+					F1243173240DEECC006439CC = {
+						CreatedOnToolsVersion = 11.3;
+					};
+					F124317F240DEECD006439CC = {
+						CreatedOnToolsVersion = 11.3;
+					};
+					F1D82F242308BF3000EECCAE = {
+						CreatedOnToolsVersion = 10.3;
+					};
+					F1D82F3D2308C7A000EECCAE = {
+						CreatedOnToolsVersion = 10.3;
+					};
+					F1D82F542308C7A100EECCAE = {
+						CreatedOnToolsVersion = 10.3;
+						TestTargetID = F1D82F3D2308C7A000EECCAE;
+					};
+					F1D82F5F2308C7A100EECCAE = {
+						CreatedOnToolsVersion = 10.3;
+						TestTargetID = F1D82F3D2308C7A000EECCAE;
+					};
+					F1FE3AC124049D4C00084AE4 = {
+						CreatedOnToolsVersion = 11.3;
+					};
+				};
+			};
+			buildConfigurationList = F1D82F202308BF3000EECCAE /* Build configuration list for PBXProject "libhooker" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F1D82F1C2308BF3000EECCAE;
+			productRefGroup = F1D82F262308BF3000EECCAE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1D82F3D2308C7A000EECCAE /* libhooker-test */,
+				F1D82F242308BF3000EECCAE /* hooker */,
+				F1FE3AC124049D4C00084AE4 /* blackjack */,
+				F1243173240DEECC006439CC /* libhooker-watch */,
+				F124317F240DEECD006439CC /* libhooker-watch Extension */,
+				F1D82F542308C7A100EECCAE /* libhooker-testTests */,
+				F1D82F5F2308C7A100EECCAE /* libhooker-testUITests */,
+				F16DE31E25C63798002B0A52 /* hooker (watchOS) */,
+				F16DE37725C637D5002B0A52 /* blackjack (watchOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F1243172240DEECC006439CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F124319E240DF0B2006439CC /* Assets.xcassets in Resources */,
+				F1243178240DEECC006439CC /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F124317E240DEECD006439CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12431A8240DF0CD006439CC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F3C2308C7A000EECCAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D82F4D2308C7A100EECCAE /* LaunchScreen.storyboard in Resources */,
+				F1D82F4A2308C7A100EECCAE /* Assets.xcassets in Resources */,
+				F1D82F482308C7A000EECCAE /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F532308C7A100EECCAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F5E2308C7A100EECCAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F124317C240DEECD006439CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12431A6240DF0CD006439CC /* ExtensionDelegate.m in Sources */,
+				F12431A7240DF0CD006439CC /* InterfaceController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE31F25C63798002B0A52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F16DE32025C63798002B0A52 /* shadowMem.c in Sources */,
+				F16DE32125C63798002B0A52 /* funcHook.c in Sources */,
+				F16DE32225C63798002B0A52 /* shadowMem.cpp in Sources */,
+				F16DE32325C63798002B0A52 /* dyldSyms.c in Sources */,
+				F1E1689326EB8F0600D2C62D /* dyld4Find.c in Sources */,
+				F16DE32425C63798002B0A52 /* disas-aarch64.c in Sources */,
+				F16DE32525C63798002B0A52 /* misc.c in Sources */,
+				F16DE32625C63798002B0A52 /* writeMem-darwin.c in Sources */,
+				F16DE32725C63798002B0A52 /* as-aarch64.c in Sources */,
+				F16DE32825C63798002B0A52 /* machWrapper.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16DE37825C637D5002B0A52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F16DE37925C637D5002B0A52 /* objc.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F212308BF3000EECCAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F16DE2EC25C63630002B0A52 /* shadowMem.c in Sources */,
+				F14F2DFF2403DEE700F4BD27 /* funcHook.c in Sources */,
+				F14CFD262502EE3C003D6C4F /* shadowMem.cpp in Sources */,
+				F1D82F342308C08000EECCAE /* dyldSyms.c in Sources */,
+				F1E1689226EB8F0200D2C62D /* dyld4Find.c in Sources */,
+				F1686EDD2400BAC600DBDE02 /* disas-aarch64.c in Sources */,
+				F1FE3AD72404D57B00084AE4 /* misc.c in Sources */,
+				F1FCE82223F4056E00B0F396 /* writeMem-darwin.c in Sources */,
+				F14F2DFB240139C400F4BD27 /* as-aarch64.c in Sources */,
+				F15A4A332487ACD500104B38 /* machWrapper.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F3A2308C7A000EECCAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D82F452308C7A000EECCAE /* ViewController.m in Sources */,
+				F1D82F502308C7A100EECCAE /* main.m in Sources */,
+				F1D82F422308C7A000EECCAE /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F512308C7A100EECCAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D82F5A2308C7A100EECCAE /* libhooker_testTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1D82F5C2308C7A100EECCAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1D82F652308C7A100EECCAE /* libhooker_testUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1FE3ABE24049D4C00084AE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1FE3ACF2404AB8C00084AE4 /* objc.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1243183240DEECD006439CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F124317F240DEECD006439CC /* libhooker-watch Extension */;
+			targetProxy = F1243182240DEECD006439CC /* PBXContainerItemProxy */;
+		};
+		F124318F240DEECE006439CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1243173240DEECC006439CC /* libhooker-watch */;
+			targetProxy = F124318E240DEECE006439CC /* PBXContainerItemProxy */;
+		};
+		F16DE39325C637FD002B0A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F16DE37725C637D5002B0A52 /* blackjack (watchOS) */;
+			targetProxy = F16DE39225C637FD002B0A52 /* PBXContainerItemProxy */;
+		};
+		F16DE39525C637FD002B0A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F16DE31E25C63798002B0A52 /* hooker (watchOS) */;
+			targetProxy = F16DE39425C637FD002B0A52 /* PBXContainerItemProxy */;
+		};
+		F16DE39725C63804002B0A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F16DE37725C637D5002B0A52 /* blackjack (watchOS) */;
+			targetProxy = F16DE39625C63804002B0A52 /* PBXContainerItemProxy */;
+		};
+		F16DE39925C63804002B0A52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F16DE31E25C63798002B0A52 /* hooker (watchOS) */;
+			targetProxy = F16DE39825C63804002B0A52 /* PBXContainerItemProxy */;
+		};
+		F1D82F572308C7A100EECCAE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1D82F3D2308C7A000EECCAE /* libhooker-test */;
+			targetProxy = F1D82F562308C7A100EECCAE /* PBXContainerItemProxy */;
+		};
+		F1D82F622308C7A100EECCAE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1D82F3D2308C7A000EECCAE /* libhooker-test */;
+			targetProxy = F1D82F612308C7A100EECCAE /* PBXContainerItemProxy */;
+		};
+		F1D82F732308C7BB00EECCAE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1D82F242308BF3000EECCAE /* hooker */;
+			targetProxy = F1D82F722308C7BB00EECCAE /* PBXContainerItemProxy */;
+		};
+		F1FE3AD12404AC9000084AE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1FE3AC124049D4C00084AE4 /* blackjack */;
+			targetProxy = F1FE3AD02404AC9000084AE4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F1243176240DEECC006439CC /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1243177240DEECC006439CC /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		F1D82F462308C7A000EECCAE /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1D82F472308C7A000EECCAE /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F1D82F4B2308C7A100EECCAE /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F1D82F4C2308C7A100EECCAE /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F1243192240DEECE006439CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64_32;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				INFOPLIST_FILE = "libhooker-watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-fgnu-inline-asm",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = 4;
+				VALID_ARCHS = arm64_32;
+			};
+			name = Debug;
+		};
+		F1243193240DEECE006439CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64_32;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				INFOPLIST_FILE = "libhooker-watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-fgnu-inline-asm",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = 4;
+				VALID_ARCHS = arm64_32;
+			};
+			name = Release;
+		};
+		F1243196240DEECE006439CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64_32;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				IBSC_MODULE = libhooker_watch_Extension;
+				INFOPLIST_FILE = "libhooker-watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = 4;
+				VALID_ARCHS = arm64_32;
+			};
+			name = Debug;
+		};
+		F1243197240DEECE006439CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64_32;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				IBSC_MODULE = libhooker_watch_Extension;
+				INFOPLIST_FILE = "libhooker-watch/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = 4;
+				VALID_ARCHS = arm64_32;
+			};
+			name = Release;
+		};
+		F16DE32C25C63798002B0A52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F16DE32D25C63798002B0A52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F16DE37D25C637D5002B0A52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/libhooker/include\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F16DE37E25C637D5002B0A52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/libhooker/include\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F1D82F2C2308BF3000EECCAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphoneos*]" = (
+					arm64,
+					arm64e,
+				);
+				"ARCHS[sdk=watchos*]" = arm64_32;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-fgnu-inline-asm",
+				);
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				VALID_ARCHS = "arm64 arm64e arm64_32";
+				WATCHOS_DEPLOYMENT_TARGET = 5.0;
+			};
+			name = Debug;
+		};
+		F1D82F2D2308BF3000EECCAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"ARCHS[sdk=iphoneos*]" = (
+					arm64,
+					arm64e,
+				);
+				"ARCHS[sdk=watchos*]" = arm64_32;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-fgnu-inline-asm",
+				);
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 arm64e arm64_32";
+				WATCHOS_DEPLOYMENT_TARGET = 5.0;
+			};
+			name = Release;
+		};
+		F1D82F2F2308BF3000EECCAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1D82F302308BF3000EECCAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F1D82F682308C7A100EECCAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				INFOPLIST_FILE = "libhooker-test/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e";
+			};
+			name = Debug;
+		};
+		F1D82F692308C7A100EECCAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TCM49M8P5K;
+				INFOPLIST_FILE = "libhooker-test/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-test";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e";
+			};
+			name = Release;
+		};
+		F1D82F6B2308C7A100EECCAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "libhooker-testTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-testTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/libhooker-test.app/libhooker-test";
+			};
+			name = Debug;
+		};
+		F1D82F6C2308C7A100EECCAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "libhooker-testTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-testTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/libhooker-test.app/libhooker-test";
+			};
+			name = Release;
+		};
+		F1D82F6E2308C7A100EECCAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "libhooker-testUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-testUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "libhooker-test";
+			};
+			name = Debug;
+		};
+		F1D82F6F2308C7A100EECCAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "libhooker-testUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.coolstar.libhooker-testUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "libhooker-test";
+			};
+			name = Release;
+		};
+		F1FE3AC924049D4C00084AE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/libhooker/include\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1FE3ACA24049D4C00084AE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/libhooker/include\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F1243191240DEECE006439CC /* Build configuration list for PBXNativeTarget "libhooker-watch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1243192240DEECE006439CC /* Debug */,
+				F1243193240DEECE006439CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1243195240DEECE006439CC /* Build configuration list for PBXNativeTarget "libhooker-watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1243196240DEECE006439CC /* Debug */,
+				F1243197240DEECE006439CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F16DE32B25C63798002B0A52 /* Build configuration list for PBXNativeTarget "hooker (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F16DE32C25C63798002B0A52 /* Debug */,
+				F16DE32D25C63798002B0A52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F16DE37C25C637D5002B0A52 /* Build configuration list for PBXNativeTarget "blackjack (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F16DE37D25C637D5002B0A52 /* Debug */,
+				F16DE37E25C637D5002B0A52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D82F202308BF3000EECCAE /* Build configuration list for PBXProject "libhooker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D82F2C2308BF3000EECCAE /* Debug */,
+				F1D82F2D2308BF3000EECCAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D82F2E2308BF3000EECCAE /* Build configuration list for PBXNativeTarget "hooker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D82F2F2308BF3000EECCAE /* Debug */,
+				F1D82F302308BF3000EECCAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D82F672308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D82F682308C7A100EECCAE /* Debug */,
+				F1D82F692308C7A100EECCAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D82F6A2308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-testTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D82F6B2308C7A100EECCAE /* Debug */,
+				F1D82F6C2308C7A100EECCAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1D82F6D2308C7A100EECCAE /* Build configuration list for PBXNativeTarget "libhooker-testUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D82F6E2308C7A100EECCAE /* Debug */,
+				F1D82F6F2308C7A100EECCAE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1FE3AC824049D4C00084AE4 /* Build configuration list for PBXNativeTarget "blackjack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1FE3AC924049D4C00084AE4 /* Debug */,
+				F1FE3ACA24049D4C00084AE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1D82F1D2308BF3000EECCAE /* Project object */;
+}

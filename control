@@ -1,0 +1,9 @@
+Package: org.coolstar.libhooker
+Name: libhooker
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome library of some sort!!
+Maintainer: CoolStar
+Author: CoolStar
+Section: System
+Tag: role::developer
