@@ -22,8 +22,6 @@
 
 #include "dyld_cache_format.h"
 #include <mach-o/dyld_images.h>
-#include <mach-o/loader.h>
-#include <mach-o/dyld.h>
 
 #include <dlfcn.h>
 #include <ptrauth.h>
@@ -44,21 +42,9 @@ privateFunc int dyldSharedCacheFd;
 privateFunc struct dyld_symbol_cache_info *dyldSymbolCacheInfo;
 privateFunc struct dyld_cache_local_symbols_entry_64 *dyldSharedCacheLocalSymEntry;
 
-//dyld methods
-static int dyldVersion;
+dispatch_semaphore_t dyld_debugger_notif_sem;
 
-static uintptr_t (*dyld_ImageLoaderMachO_getSlide)(void *);
-static const struct mach_header *(*dyld_ImageLoaderMachO_machHeader)(void *);
-/*MegaDylib methods*/
-static uintptr_t (*dyld_ImageLoaderMegaDylib_getSlide)(void*);
-static void *(*dyld_ImageLoaderMegaDylib_getIndexedMachHeader)(void*, unsigned index);
-static void *(*dyld_ImageLoaderMegaDylib_isCacheHandle)(void*proxy, void* handle, unsigned* index, uint8_t* flags);
-static void **dyld_sAllCacheImagesProxy;
-/*dyld3 methods */
-static uintptr_t (*dyld3_MachOLoaded_getSlide)(const void *);
-/*dyld4 methods */
-static void *(*dyld4_Loader_loadAddress_RuntimeState)(const void *, const void *);
-static void *dyld4_RuntimeState;
+
 #if __LP64__
 #define LHnlist nlist_64
 #else
@@ -86,18 +72,39 @@ privateFunc const struct dyld_cache_header *getDyldCacheHeader(void){
     return hdr;
 }
 
-privateFunc bool openDyldCache(const char *dir, const char *arch, bool isDyld4, const struct dyld_cache_header *hdr){
+privateFunc bool openDyldCache(const struct dyld_cache_header *hdr){
     dyldSharedCacheLocalSymEntry = NULL;
     
-    char path[PATH_MAX];
-    bzero(path, PATH_MAX);
+    // Get the filepath for the primary shared cache. Depending on the environment, this may or may not
+    // be the cache that contains local symbol information
+    void *_proc_regionfilename = dlsym(dlopen(NULL, 0), "proc_regionfilename");
+    const struct dyld_all_image_infos *imageInfos = dyldGetAllImageInfos();
+    uintptr_t sharedCacheAddress = imageInfos->sharedCacheBaseAddress;
+
+    char cachePath[PATH_MAX];
+    if (((int (*)(pid_t, uintptr_t, char *, size_t))_proc_regionfilename)(getpid(), sharedCacheAddress, cachePath, PATH_MAX) < 1) {
+        libhooker_panic("Failed to locate filepath for the shared cache at %p\n", (void *)sharedCacheAddress);
+    }
     
-    char *extension = isDyld4 ? ".symbols" : "";
+    libhooker_log("Shared cache location: %s\n", cachePath);
     
-    guardRetFalse(snprintf(path, PATH_MAX, "%s%s%s%s", dir, DYLD_SHARED_CACHE_BASE_NAME, arch, extension) >= sizeof(path));
+    // dyld4 on iOS devices store locals in a subcache located alongside the primary cache.
+    // iOS Simulator and macOS use a single prelinked cache (even on dyld4).
+    // Use the symbols subcache if it exists, otherwise use the primary cache
+    int usesSymbolCache = hdr->mappingOffset >= offsetof(struct dyld_cache_header, symbolFileUUID) && uuid_is_null(hdr->symbolFileUUID) == 0;
+    if (usesSymbolCache) {
+        const char *symbolsExtension = ".symbols";
+        if (strlen(cachePath) + strlen(symbolsExtension) > PATH_MAX) {
+            libhooker_panic("Symbols subcache filepath length exceeds PATH_MAX\n");
+        }
+        
+        sprintf(cachePath, "%s%s", cachePath, symbolsExtension);
+    }
     
-    int fd = open(path, O_RDONLY);
-    guardRetFalse(fd < 0);
+    int fd = open(cachePath, O_RDONLY);
+    if (fd < 0) {
+        libhooker_panic("Failed to open the shared cache!");
+    }
     
     __block bool success = false;
     
@@ -108,12 +115,6 @@ privateFunc bool openDyldCache(const char *dir, const char *arch, bool isDyld4, 
     
     struct dyld_cache_header fsHdr;
     guardRetFalse(read(fd, &fsHdr, sizeof(struct dyld_cache_header)) != sizeof(struct dyld_cache_header));
-    
-    if (isDyld4){
-        guardRetFalse(memcmp(fsHdr.uuid, hdr->symbolFileUUID, sizeof(hdr->symbolFileUUID)))
-    } else {
-        guardRetFalse(memcmp(fsHdr.uuid, hdr->uuid, sizeof(fsHdr.uuid)));
-    }
     
     struct dyld_cache_local_symbols_info *fsSymbolInfo = &dyldSharedCacheLocalSymInfo;
     lseek(fd, fsHdr.localSymbolsOffset, SEEK_SET);
@@ -138,7 +139,7 @@ privateFunc bool openDyldCache(const char *dir, const char *arch, bool isDyld4, 
     
     lseek(fd, hdr->localSymbolsOffset + fsSymbolInfo->entriesOffset, SEEK_SET);
     
-    if (isDyld4){
+    if (usesSymbolCache){
         if (read(fd, entry, entrySize) != entrySize){
             free(entry);
             return false;
@@ -148,7 +149,10 @@ privateFunc bool openDyldCache(const char *dir, const char *arch, bool isDyld4, 
         
         size_t legacyEntrySize = fsSymbolInfo->entriesCount * sizeof(struct dyld_cache_local_symbols_entry);
         struct dyld_cache_local_symbols_entry *legacyEntry = malloc(legacyEntrySize);
-        guardRetFalse(!legacyEntry);
+        if (!legacyEntry) {
+            free(entry);
+            return false;
+        }
         
         if (read(fd, legacyEntry, legacyEntrySize) != legacyEntrySize){
             free(entry);
@@ -179,33 +183,20 @@ privateFunc bool openDyldCache(const char *dir, const char *arch, bool isDyld4, 
 }
 
 privateFunc void loadSharedCache(void){
+    
     static dispatch_once_t onceTokenLoadSharedCache;
     dispatch_once(&onceTokenLoadSharedCache, ^{
-        const struct dyld_cache_header *hdr = dyldSharedCacheHdr;
-        if (memcmp(hdr->magic, "dyld_v1 ", 8))
-            return;
-        
-        const char *arch = hdr->magic + 8;
-        while (*arch == ' ')
-            arch++;
         
         dyldSharedCacheFd = -1;
         dyldSymbolCacheInfo = NULL;
         
-        if (hdr->localSymbolsSize >= sizeof(struct dyld_cache_local_symbols_info)){
-#if TARGET_OS_IPHONE
-            openDyldCache(IPHONE_DYLD_SHARED_CACHE_DIR, arch, false, hdr);
-#else
-            openDyldCache(MACOSX_DYLD_SHARED_CACHE_DIR, arch, false, hdr);
-#endif
-        } else if (hdr->mappingOffset >= offsetof(struct dyld_cache_header, symbolFileUUID) && hdr->subCacheArrayCount > 0) {
-#if TARGET_OS_IPHONE
-#define DYLD_SHARED_CACHE_DIR IPHONE_DYLD_SHARED_CACHE_DIR
-#else
-#define DYLD_SHARED_CACHE_DIR MACOSX_MRM_DYLD_SHARED_CACHE_DIR
-#endif
-            openDyldCache(DYLD_SHARED_CACHE_DIR, arch, true, hdr);
+        // iOS 16.2+ simulator zereos sharedCacheBaseAddress. hdr may be NULL
+        const struct dyld_cache_header *hdr = dyldSharedCacheHdr;
+        if (hdr == NULL || memcmp(hdr->magic, "dyld_v1 ", 8)) {
+            return;
         }
+
+        openDyldCache(hdr);
     });
 }
 
@@ -363,148 +354,132 @@ privateFunc bool findSymbols(const void *hdr,
                 searchSymCount);
 }
 
-privateFunc void inspectDyld(void){
-    static dispatch_once_t onceTokenInspectDyld;
-    dispatch_once(&onceTokenInspectDyld, ^{
-        const struct dyld_all_image_infos *imageInfos = dyldGetAllImageInfos();
-        const void *dyldHdr = imageInfos->dyldImageLoadAddress;
-        
-        uintptr_t dyldSlide = -1;
-        dyldVersion = 0;
-        
-        if (dyldVersion == 0) {
-            //dyld2 & dyld3
-            
-            const char *dyldNames[6] = {
-                "__ZNK16ImageLoaderMachO8getSlideEv",
-                "__ZNK16ImageLoaderMachO10machHeaderEv",
-                "__ZN4dyldL20sAllCacheImagesProxyE",
-                "__ZN20ImageLoaderMegaDylib13isCacheHandleEPvPjPh",
-                "__ZNK20ImageLoaderMegaDylib8getSlideEv",
-                "__ZNK20ImageLoaderMegaDylib20getIndexedMachHeaderEj"
-            };
-            void *dyldSyms[6];
-            
-            findSymbols(dyldHdr, dyldSlide, dyldNames, dyldSyms, 6);
-            if (dyldSyms[0] && dyldSyms[1]) {
-                dyldVersion = 2;
-                
-                dyld_ImageLoaderMachO_getSlide = signPtr(dyldSyms[0]);
-                dyld_ImageLoaderMachO_machHeader = signPtr(dyldSyms[1]);
-                dyld_sAllCacheImagesProxy = dyldSyms[2];
-                dyld_ImageLoaderMegaDylib_isCacheHandle = signPtr(dyldSyms[3]);
-                dyld_ImageLoaderMegaDylib_getSlide = signPtr(dyldSyms[4]);
-                dyld_ImageLoaderMegaDylib_getIndexedMachHeader = signPtr(dyldSyms[5]);
-                
-                const void *libdyldHdr = NULL;
-                intptr_t libdyldSlide = 0;
-                for(uint32_t i = 0; i < _dyld_image_count(); i++) {
-                    const char *imName = _dyld_get_image_name(i);
-                    if (strcmp(imName, "/usr/lib/system/libdyld.dylib") == 0){
-                        libdyldHdr = _dyld_get_image_header(i);
-                        libdyldSlide = _dyld_get_image_vmaddr_slide(i);
-                    }
-                }
-
-                if (libdyldHdr == NULL)
-                    return;
-                const char *libDyldNames[2] = {
-                    "_gUseDyld3",
-                    "__ZNK5dyld311MachOLoaded8getSlideEv"
-                };
-                void *libDyldSyms[2];
-                findSymbols(libdyldHdr, libdyldSlide, libDyldNames, libDyldSyms, 2);
-                if (libDyldSyms[0]){
-                    dyldVersion = *(bool *)(libDyldSyms[0]) ? 3 : 2;
-                    
-                    dyld3_MachOLoaded_getSlide = signPtr(libDyldSyms[1]);
-                }
-            }
-        }
-        
-        if (dyldVersion == 0) {
-            const char *dyldNames[2] = {
-                "__ZNK5dyld46Loader11loadAddressERNS_12RuntimeStateE",
-                "__ZNK5dyld311MachOLoaded8getSlideEv"
-            };
-            void *dyldSyms[2];
-            findSymbols(dyldHdr, dyldSlide, dyldNames, dyldSyms, 2);
-            
-            if (dyldSyms[0] && dyldSyms[1]){
-                dyldVersion = 4;
-            }
-            
-            dyld4_Loader_loadAddress_RuntimeState = signPtr(dyldSyms[0]);
-            dyld3_MachOLoaded_getSlide = signPtr(dyldSyms[1]);
-            
-            void *libdyld = dlopen("/usr/lib/system/libdyld.dylib", RTLD_NOW);
-            void *dlcloseptr = ptrauth_auth_data(dlsym(libdyld, "dlclose"), ptrauth_key_asia, 0);
-            
-            //quick and dirty patchfind (to find the dyld4 runtime state)
-            dyld4_RuntimeState = *(void **)LHFindDyld4QuickAndDirty(dlcloseptr);
-        }
-        
-        if (dyldVersion < 2) {
-            libhooker_panic("unable to determine dyld version!!! this is really bad!");
-        }
-    });
+privateFunc void new_dyld_debugger_notification(enum dyld_image_mode mode, uint32_t infoCount, const struct dyld_image_info info[]) {
+    // The image list is populated and ready to be used
+    if (dyld_debugger_notif_sem) {
+        dispatch_semaphore_signal(dyld_debugger_notif_sem);
+    }
 }
 
 LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
-    inspectDyld();
     
-    void *dyldHandle = dlopen(path, RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-    guardRetNull(!dyldHandle);
-    
-    void *image = NULL;
-    switch (dyldVersion) {
-        case 4:
-        {
-            void *strippedHandle = ptrauth_strip(dyldHandle, ptrauth_key_asda);
-            void *validHandle = ptrauth_sign_unauthenticated(strippedHandle, ptrauth_key_process_dependent_data, ptrauth_string_discriminator("dlopen"));
-            guardRetNull(dyldHandle != validHandle);
-            image = (void *)(((uint64_t)strippedHandle) >> 1);
-            break;
-        }
-        case 3:
-            image = (void*)((((uintptr_t)dyldHandle) & (-2)) << 5);
-            break;
-        default:
-            image = (void *)(((uintptr_t)dyldHandle) & (-4));
-            break;
+    // Attempt dlopen() early to ensure the path exists and image is applicable for mapping before going further
+    void *imageHandle = dlopen(path, RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
+    if (!imageHandle) {
+        libhooker_log("The image at path %s failed to open with error: %s\n", path, dlerror());
+        return NULL;
     }
     
-    const void *imageHeader = NULL;
+    /*
+     Locate the mach header and slide for the dlopen() handle to the image.
+     The _dyld_* APIs (like _dyld_get_image_header(idx)) are technically not threadsafe on dyld3 and below because the underlaying std::vector used by those functions does not perform locks before index-based accesses
+     and they have the potential to be modified during enumeration, though Apples still uses them within dyld without much consideration to this.
+     libhooker previously did a lot of work to access private functions on the dlopen handle to bypass those higher level APIs, but the functions are unstable with frequent change between iOS/macOS versions, which is
+     a burden to maintain and keep up to date. To avoid both the higher level APIs and the private dyld symbols, image information will get fetched from the dyld_all_image_infos structure.
+     
+     From mach-o/dyld_images.h:
+        
+     For a snashot of what images are currently loaded, the infoArray fields contain a pointer an array of all images. ** If infoArray is NULL, it means it is being modified, come back later. **.
+     To be notified of changes, gdb sets a break point on the address pointed to by the notification field. The function it points to is called by dyld with an array of information about what images
+     h ave been added (dyld_image_adding) or are about to be removed (dyld_image_removing).
+     
+     The notification is called after infoArray is updated.  This means that if gdb attaches to a process and infoArray is NULL, gdb can set a break point on notification and let the proccess continue to
+     run until the break point.  Then gdb can inspect the full infoArray.
+     */
+    
+    // Given the above, we can assume that as long as infoArray is not NULL, it can be relied on to not change during enumeration. If infoArray is NULL, set a breakpoint on _dyld_debugger_notification.
+    // This will fire when the image list is no longer being modified.
+    
+    const void *imageMachHeaderAddr = NULL;
     uintptr_t slide = 0;
     
-    unsigned index;
-    uint8_t mode;
-    if (dyldVersion == 4){
-        imageHeader = (const void *)dyld4_Loader_loadAddress_RuntimeState(image, dyld4_RuntimeState);
-        if (*(uint32_t *)imageHeader == MH_MAGIC_64){
-            slide = dyld3_MachOLoaded_getSlide(imageHeader);
+    const struct dyld_all_image_infos *imageInfos = dyldGetAllImageInfos();
+    if (imageInfos->infoArray == NULL) {
+        
+        // The image list has not been populated or is currently being modified. Setup to be notified when this is complete
+        dyld_debugger_notif_sem = dispatch_semaphore_create(0);
+        
+        const char *dyldNames[1] = {
+            "__dyld_debugger_notification"
+        };
+        void *dyldSyms[1];
+        findSymbols(imageInfos->dyldImageLoadAddress, -1, dyldNames, dyldSyms, 1);
+        if (dyldSyms[0] == NULL) {
+            libhooker_log("imageInfos->infoArray is NULL and __dyld_debugger_notification could not be found.\n");
+            return NULL;
         }
-    } else if (dyldVersion == 3){
-        if (*(uint32_t *)image == MH_MAGIC_64 && dyld3_MachOLoaded_getSlide != NULL){
-            imageHeader = (const void *)image;
-            slide = dyld3_MachOLoaded_getSlide(imageHeader);
-        }
-    } else if (dyld_ImageLoaderMegaDylib_isCacheHandle != NULL && dyld_ImageLoaderMegaDylib_isCacheHandle(*dyld_sAllCacheImagesProxy, image, &index, &mode)){
-        if (dyld_ImageLoaderMegaDylib_getSlide == NULL || dyld_ImageLoaderMegaDylib_getIndexedMachHeader == NULL)
-        libhooker_panic("couldn't find required dyld methods\n");
-        imageHeader = dyld_ImageLoaderMegaDylib_getIndexedMachHeader(*dyld_sAllCacheImagesProxy, index);
-        slide = dyld_ImageLoaderMegaDylib_getSlide(*dyld_sAllCacheImagesProxy);
-    } else {
-       imageHeader = dyld_ImageLoaderMachO_machHeader(image);
-       slide = dyld_ImageLoaderMachO_getSlide(image);
-   }
+        
+        void *__dyld_debugger_notification = signPtr(dyldSyms[0]);
+        struct LHFunctionHook hooks[] = {
+            {__dyld_debugger_notification, &new_dyld_debugger_notification, NULL}
+        };
+        
+        LHHookFunctions(hooks, 1);
+        ((void (*)(enum dyld_image_mode, uint32_t, const struct dyld_image_info info[]))__dyld_debugger_notification)(dyld_image_adding, 0, NULL);
+        
+        // Wait a small amount of time to see if dyld notifies of image build completion
+        dispatch_semaphore_wait(dyld_debugger_notif_sem, (dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC))));
+    }
     
+    // Try to access the image infos list again. If it's still NULL, bail
+    if (imageInfos->infoArray == NULL) {
+        libhooker_log("imageInfos->infoArray is NULL and __dyld_debugger_notification did not fire in a reasonable amount of time. Bailing\n.");
+        return NULL;
+    }
+    
+    // We can trust that infoArray is populated and won't change out from under us
+    for (int i = 0; i < imageInfos->infoArrayCount; i++) {
+        // Sanity check. Shouldn't be necessary though
+        if (imageInfos->infoArray == NULL) {
+            break;
+        }
+        
+        // Look for the correct image by filepath. A substring search is performed instead of strcmp because Simulator and iOSOnMac
+        // use a path relative to macOS
+        const struct dyld_image_info info = imageInfos->infoArray[i];
+        if (strstr(info.imageFilePath, path)) {
+            imageMachHeaderAddr = info.imageLoadAddress;
+            break;
+        }
+    }
+    
+    if (imageMachHeaderAddr == NULL) {
+        libhooker_log("Opening the image at %s yielded a handle but the associated mach_header could not be found.\n", path);
+        return NULL;
+    }
+    
+    // Header was located. Find the image's slide by walking load commands
+#if __LP64__
+    const struct mach_header_64 *machHeader = imageMachHeaderAddr;
+    uint32_t headerSize = sizeof(struct mach_header_64);
+    guardRetFalse(machHeader->magic != MH_MAGIC_64);
+#else
+    const struct mach_header *machHeader = imageMachHeaderAddr;
+    uint32_t headerSize = sizeof(struct mach_header);
+    guardRetFalse(machHeader->magic != MH_MAGIC);
+#endif
+    
+    struct load_command *loadCmd = (struct load_command *)(((char *)machHeader) + headerSize);
+    for (uint32_t i = 0; i < machHeader->ncmds; i++){
+        if (loadCmd->cmd == LC_SEGMENT_64) {
+            
+            struct segment_command_64 *seg = (struct segment_command_64 *)loadCmd;
+            if (seg->fileoff == 0 && seg->filesize != 0) {
+                slide = (uintptr_t)imageMachHeaderAddr - seg->vmaddr;
+                break;
+            }
+        }
+
+        loadCmd = (void *)loadCmd + loadCmd->cmdsize;
+    }
+    
+    // Build the libhooker_image struct containing this image's dlopen handle, mach_header, and slide
     struct libhooker_image *libhookerImage = malloc(sizeof(struct libhooker_image));
     guardRetNull(!libhookerImage);
     
-    libhookerImage->imageHeader = imageHeader;
+    libhookerImage->imageHeader = machHeader;
     libhookerImage->slide = slide;
-    libhookerImage->dyldHandle = dyldHandle;
+    libhookerImage->dyldHandle = imageHandle;
     
     return libhookerImage;
 }
