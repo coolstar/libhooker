@@ -77,16 +77,16 @@ privateFunc bool openDyldCache(const struct dyld_cache_header *hdr){
     
     // Get the filepath for the primary shared cache. Depending on the environment, this may or may not
     // be the cache that contains local symbol information
-    void *_proc_regionfilename = dlsym(dlopen(NULL, 0), "proc_regionfilename");
-    const struct dyld_all_image_infos *imageInfos = dyldGetAllImageInfos();
-    uintptr_t sharedCacheAddress = imageInfos->sharedCacheBaseAddress;
-
-    char cachePath[PATH_MAX];
-    if (((int (*)(pid_t, uintptr_t, char *, size_t))_proc_regionfilename)(getpid(), sharedCacheAddress, cachePath, PATH_MAX) < 1) {
-        libhooker_panic("Failed to locate filepath for the shared cache at %p\n", (void *)sharedCacheAddress);
+    void *_dyld_shared_cache_file_path = dlsym(dlopen(NULL, 0), "dyld_shared_cache_file_path");
+    if (_dyld_shared_cache_file_path == NULL) {
+        libhooker_panic("Could not find dyld_shared_cache_file_path()");
     }
-    
-    libhooker_log("Shared cache location: %s\n", cachePath);
+
+    const char *cachePath = ((const char * (*)(void))_dyld_shared_cache_file_path)();
+    if (cachePath == NULL || strlen(cachePath) < 1) {
+        libhooker_panic("Failed to locate shared cache");
+    }
+    debugPrint("Shared cache location: %s\n", cachePath);
     
     // dyld4 on iOS devices store locals in a subcache located alongside the primary cache.
     // iOS Simulator and macOS use a single prelinked cache (even on dyld4).
@@ -94,11 +94,14 @@ privateFunc bool openDyldCache(const struct dyld_cache_header *hdr){
     int usesSymbolCache = hdr->mappingOffset >= offsetof(struct dyld_cache_header, symbolFileUUID) && uuid_is_null(hdr->symbolFileUUID) == 0;
     if (usesSymbolCache) {
         const char *symbolsExtension = ".symbols";
-        if (strlen(cachePath) + strlen(symbolsExtension) > PATH_MAX) {
+        size_t symbolCachePathLen = strlen(cachePath) + strlen(symbolsExtension);
+        if (symbolCachePathLen > PATH_MAX) {
             libhooker_panic("Symbols subcache filepath length exceeds PATH_MAX\n");
         }
         
-        sprintf(cachePath, "%s%s", cachePath, symbolsExtension);
+        char symbolCachePath[PATH_MAX];
+        sprintf(symbolCachePath, "%s%s", cachePath, symbolsExtension);
+        cachePath = symbolCachePath;
     }
     
     int fd = open(cachePath, O_RDONLY);
@@ -293,11 +296,14 @@ privateFunc bool findSymbols(const void *hdr,
     memset(searchSyms, 0, sizeof(void *) * searchSymCount);
     
     struct dyld_cache_local_symbols_entry_64 entry;
-    if (inSharedCache(hdr, &entry)){
-        if (getSymsFromSharedCache(entry, slide, symbolNames, searchSyms, searchSymCount))
+    if (inSharedCache(hdr, &entry)) {
+        // TODO: don't silenty return a symbol from the local symtable if the provided header is in the cache but the given
+        // symbol was not found
+        if (getSymsFromSharedCache(entry, slide, symbolNames, searchSyms, searchSymCount)) {
             return true;
+        }
     }
-    
+
 #if __LP64__
     const struct mach_header_64 *machHeader = hdr;
     guardRetFalse(machHeader->magic != MH_MAGIC_64);
@@ -379,7 +385,7 @@ LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
      
      From mach-o/dyld_images.h:
         
-     For a snashot of what images are currently loaded, the infoArray fields contain a pointer an array of all images. ** If infoArray is NULL, it means it is being modified, come back later. **.
+     For a snapshot of what images are currently loaded, the infoArray fields contain a pointer an array of all images. ** If infoArray is NULL, it means it is being modified, come back later. **.
      To be notified of changes, gdb sets a break point on the address pointed to by the notification field. The function it points to is called by dyld with an array of information about what images
      h ave been added (dyld_image_adding) or are about to be removed (dyld_image_removing).
      
@@ -436,6 +442,7 @@ LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
         
         // Look for the correct image by filepath. A substring search is performed instead of strcmp because Simulator and iOSOnMac
         // use a path relative to macOS
+        // TODO: maybe strcmp on ios
         const struct dyld_image_info info = imageInfos->infoArray[i];
         if (strstr(info.imageFilePath, path)) {
             imageMachHeaderAddr = info.imageLoadAddress;

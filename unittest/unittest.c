@@ -2,6 +2,7 @@
 #import <ptrauth.h>
 #import <unistd.h>
 #import <objc/runtime.h>
+#import <mach-o/dyld.h>
 #import <CoreFoundation/CoreFoundation.h>
 
 #ifdef THEOS
@@ -22,6 +23,20 @@
 #import "libblackjack.h"
 #endif
 
+#define ASSERT(condition, message) \
+    do { \
+        if (!(condition)) { \
+            printf("%s:%d: %s: Test failed: %s\n", \
+                   __FILE__, __LINE__, __func__, message); \
+            return; \
+        } \
+    } while (0)
+
+#define RUN_TEST(test) do { \
+        printf("Running test: %s\n", #test); \
+        test(); \
+    } while (0)
+
 #define    CS_OPS_STATUS        0    /* return status */
 int csops(pid_t pid, unsigned int  ops, void * useraddr, size_t usersize);
 
@@ -31,135 +46,246 @@ void printCSOps(void){
     printf("retval: %d, ops: 0x%x\n", retval, ops);
 }
 
-void testDyld(void){
-    const char *swiftNames[1] = {
+void test_LHOpenImage(void) {
+    
+    void *expectedHandle = dlopen("/usr/lib/swift/libswiftDemangle.dylib", RTLD_NOW);
+    ASSERT(expectedHandle, "dlopen returned NULL");
+    
+    const struct mach_header *expectedHeader = NULL;
+    uintptr_t expectedSlide = -1;
+    for (int i = 0; i < _dyld_image_count(); i++) {
+        if (strstr(_dyld_get_image_name(i), "libswiftDemangle.dylib")) {
+            expectedHeader = _dyld_get_image_header(i);
+            expectedSlide = _dyld_get_image_vmaddr_slide(i);
+            break;
+        }
+    }
+    ASSERT(expectedHeader, "Could not find mach_header with _dyld_get_image_header()");
+    
+    struct libhooker_image *lhHandle = LHOpenImage("/usr/lib/swift/libswiftDemangle.dylib");
+    ASSERT(lhHandle, "LHOpenImage() returned NULL");
+    
+    int cond1 = lhHandle->dyldHandle == expectedHandle;
+    int cond2 = lhHandle->imageHeader == expectedHeader;
+    int cond3 = lhHandle->slide == expectedSlide;
+    
+    LHCloseImage(lhHandle);
+
+    ASSERT(cond1, "LH's dyldHandle doesn't match dlopen's");
+    ASSERT(cond2, "LH's imageHeader doesn't match _dyld_get_image_header()");
+    ASSERT(cond3, "LH's slide doesn't match _dyld_get_image_vmaddr_slide");
+}
+
+void test_LHFindSymbols__single_symbol_and_invoke(void) {
+    
+    const char *symbol_names[1] = {
         "_swift_demangle_getDemangledName"
     };
-    void *swiftSyms[1];
+    void *symbol_pointers[1];
     
-    dlopen("/usr/lib/swift/libswiftDemangle.dylib", RTLD_NOW);
+    struct libhooker_image *lhHandle = LHOpenImage("/usr/lib/swift/libswiftDemangle.dylib");
+    ASSERT(lhHandle, "LHOpenImage() returned NULL");
     
-    struct libhooker_image *libswiftDemangle = LHOpenImage("/usr/lib/swift/libswiftDemangle.dylib");
-    LHFindSymbols(libswiftDemangle, swiftNames, swiftSyms, 1);
-    LHCloseImage(libswiftDemangle);
+    int success = LHFindSymbols(lhHandle, symbol_names, symbol_pointers, 1);
+    LHCloseImage(lhHandle);
     
-    const char *systemNames[1] = {
-        "_posix_spawn"
-    };
-    void *systemSyms[1];
-    
-    struct libhooker_image *libsystem = LHOpenImage("/usr/lib/system/libsystem_kernel.dylib");
-    LHFindSymbols(libsystem, systemNames, systemSyms, 1);
-    LHCloseImage(libsystem);
-    
-    const char *coreTextNames[1] = {
-        "_CTFontSetAltTextStyleSpec"
-    };
-    void *coreTextSyms[1];
-    
-    struct libhooker_image *coreText = LHOpenImage("/System/Library/Frameworks/CoreText.framework/CoreText");
-    LHFindSymbols(coreText, coreTextNames, coreTextSyms, 1);
-    LHCloseImage(coreText);
-    
-    void *uikitSyms[1];
-    uikitSyms[0] = NULL;
-    struct libhooker_image *uikitCore = LHOpenImage("/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore");
-    LHFindSymbols(uikitCore, coreTextNames, uikitSyms, 1);
-    LHCloseImage(uikitCore);
-    
-    printf("libswift: 0x%llx\n", (uint64_t)swiftSyms[0]);
-    printf("libsystem: 0x%llx\n", (uint64_t)systemSyms[0]);
-    printf("coretext: 0x%llx\n", (uint64_t)coreTextSyms[0]);
-    printf("uikit: 0x%llx\n", (uint64_t)uikitSyms[0]);
-    
-#if DEBUG
-    printf("Header: 0x%llx\n", (uint64_t)getDyldCacheHeader());
-#endif
+    ASSERT(success, "LHFindSymbols() failed");
+    ASSERT(symbol_pointers[0], "LHFindSymbols failed to find _swift_demangle_getDemangledName");
+
+    // Make sure returned symbols are callable
+    char demangled[65];
+    ((size_t (*)(const char *, char *, size_t))symbol_pointers[0])("_TMaC17find_the_treasure15YD_Secret_Class", demangled, 65);
+    ASSERT(strcmp(demangled, "type metadata accessor for find_the_treasure.YD_Secret_Class") == 0, "Invoked function has unexpected return value");
 }
 
-__attribute__((aligned(0x4000))) //separate page
-int victimFunctionForMemoryHook(void){
-    printf("Hello World\n");
-    return -10;
+void test_LHFindSymbols__single_symbol(void) {
+    
+    const char *symbol_names[1] = {
+        "_CTFontLogSuboptimalRequest"
+    };
+    void *symbol_pointers[1];
+    
+    struct libhooker_image *lhHandle = LHOpenImage("/System/Library/Frameworks/CoreText.framework/CoreText");
+    ASSERT(lhHandle, "LHOpenImage() returned NULL");
+    
+    int success = LHFindSymbols(lhHandle, symbol_names, symbol_pointers, 1);
+    LHCloseImage(lhHandle);
+    
+    ASSERT(success, "LHFindSymbols() failed");
+    ASSERT(symbol_pointers[0], "LHFindSymbols failed to find _CTFontLogSuboptimalRequest");
 }
 
-__attribute__((aligned(0x4000))) //separate page
-void testMemoryHook(void){
-    printf("Calling victim function...\n");
-    int ret = victimFunctionForMemoryHook();
-    printf("Returned %d before write memory\n", ret);
+void test_LHFindSymbols__multiple_symbols(void) {
     
-    char replacementInstrs[] = {0xa0, 0x00, 0x80, 0xd2, //mov x0, #5
-        0xc0, 0x03, 0x5f, 0xd6}; //ret
+    const char *symbol_names[7] = {
+        "_posix_spawn",
+        "___semwait_signal_nocancel",
+        "_reboot",
+        "_mmap",
+        "_mprotect",
+        "_listen",
+        "_getsockname"
+    };
+    void *symbol_pointers[7];
+    
+    struct libhooker_image *lhHandle = LHOpenImage("/usr/lib/system/libsystem_kernel.dylib");
+    ASSERT(lhHandle, "LHOpenImage() returned NULL");
+    
+    int success = LHFindSymbols(lhHandle, symbol_names, symbol_pointers, 7);
+    LHCloseImage(lhHandle);
+    
+    ASSERT(success, "LHFindSymbols() failed");
+    
+    for (int i = 0; i < 6; i++) {
+        ASSERT(symbol_pointers[i] != NULL, "LHFindSymbols failed to find one of the provided symbol names");
+    }
+}
+
+void test_getDyldCacheHeader(void) {
+    ASSERT(getDyldCacheHeader(), "getDyldCacheHeader() returned NULL");
+}
+
+__attribute__((aligned(0x4000)))
+int _test_LHPatchMemory_single_patch_target(void) { return -10; }
+void test_LHPatchMemory_single_patch(void) {
+    
+    int expectedOriginalValue = -10;
+    int expectedReplacementValue = 5;
+    
+    char replacementInstrs[] = {
+        0xa0, 0x00, 0x80, 0xd2, //mov x0, #5
+        0xc0, 0x03, 0x5f, 0xd6  //ret
+    };
+    
+    ASSERT(expectedOriginalValue == _test_LHPatchMemory_single_patch_target(), "Function didn't have expected retval before memory patch");
+    
     struct LHMemoryPatch patch = {
-        ptrauth_strip(&victimFunctionForMemoryHook, ptrauth_key_asia), replacementInstrs, 8 * sizeof(char)
+        ptrauth_strip(&_test_LHPatchMemory_single_patch_target, ptrauth_key_asia), replacementInstrs, 8 * sizeof(char)
     };
-    LHPatchMemory(&patch, 1);
     
-    printf("Calling victim function...\n");
-    ret = victimFunctionForMemoryHook();
-    printf("Returned %d after write memory\n", ret);
+    int successfulPatches = LHPatchMemory(&patch, 1);
+
+    ASSERT(successfulPatches == 1, "LHPatchMemory() failed");
+    ASSERT(expectedReplacementValue == _test_LHPatchMemory_single_patch_target(), "Function didn't have expected retval after memory patch");
+}
+
+__attribute__((aligned(0x4000)))
+int _test_LHPatchMemory_multiple_patches_target(void) { return 45; }
+void test_LHPatchMemory_multiple_patches(void) {
     
-    printCSOps();
+    int expectedOriginalValue_1 = 45;
+    int expectedReplacementValue_1 = 10;
+    int expectedReplacementValue_2 = 3;
+
+    char replacementInstrs_1[] = {
+        0x40, 0x01, 0x80, 0xd2, // mov x0, #10
+        0xc0, 0x03, 0x5f, 0xd6  // ret
+    };
     
-    const char *names[1] = {"_csops"};
-    void *symbols[1];
+    char replacementInstrs_2[] = {
+        0x60, 0x00, 0x80, 0xd2, // mov x0, #3
+        0x01, 0xcf, 0x8a, 0x52, // movz x1, #0x5678
+        0x81, 0x46, 0xa2, 0x72, // movk w1, #0x1234, lsl 16
+        0x41, 0x00, 0x00, 0xb9, // str x1, [x2]
+        0xc0, 0x03, 0x5f, 0xd6  // ret
+    };
+    
+    ASSERT(expectedOriginalValue_1 == _test_LHPatchMemory_multiple_patches_target(), "Function didn't have expected retval before memory patch");
+    
+    const char *symbol_names[1] = {"_csops"};
+    void *symbol_pointers[1];
     struct libhooker_image *libsystem = LHOpenImage("/usr/lib/system/libsystem_kernel.dylib");
-    LHFindSymbols(libsystem, names, symbols, 1);
+    ASSERT(libsystem, "LHOpenImage() returned NULL for libsystem_kernel");
+    
+    int success = LHFindSymbols(libsystem, symbol_names, symbol_pointers, 1);
     LHCloseImage(libsystem);
+    ASSERT(success && symbol_pointers[0], "LHFindSymbols() failed to find _csops");
     
-    printf("csops function: %p\n", symbols[0]);
-    
-    char replacementInstrs_csops[] = {0x60, 0x00, 0x80, 0xd2, //mov x0, #3
-        0x01, 0xcf, 0x8a, 0x52, //movz x1, #0x5678
-        0x81, 0x46, 0xa2, 0x72, //movk w1, #0x1234, lsl 16
-        0x41, 0x00, 0x00, 0xb9, //str x1, [x2]
-        0xc0, 0x03, 0x5f, 0xd6}; //ret
-    struct LHMemoryPatch patch2 = {
-        symbols[0], replacementInstrs_csops, 20 * sizeof(char)
+    struct LHMemoryPatch patches[2] = {
+        {ptrauth_strip(&_test_LHPatchMemory_multiple_patches_target, ptrauth_key_asia), replacementInstrs_1, 8 * sizeof(char)},
+        {symbol_pointers[0], replacementInstrs_2, 20 * sizeof(char)}
     };
-    LHPatchMemory(&patch2, 1);
     
-    printCSOps();
-}
+    int successfulPatches = LHPatchMemory(patches, 2);
 
-__attribute__((aligned(0x4000))) //separate page
-void (*origTestFunctionForFuncHook)(void);
-
-void testFunctionForFuncHook(void){
-    printf("This is a test function\n");
-    printf("Ideally, we should be able to still call into this\n");
-}
-
-void replacementFunctionForHook(void){
-    printf("This is a replacement function\n");
-    printf("Now let's try calling the original function...\n");
-    origTestFunctionForFuncHook();
-}
-
-void (*origTestFunctionForFuncHook2)(void);
-void replacementFunctionForHook2(void){
-    printf("This is second replacement function\n");
-    printf("Now let's try calling the original function (should be the first replacement)...\n");
-    origTestFunctionForFuncHook2();
-}
-
-__attribute__((aligned(0x4000))) //separate page
-void testFunctionHook(void){
-    printf("Testing Function hooking!\n");
+    ASSERT(successfulPatches == 2, "LHPatchMemory() failed");
+    ASSERT(expectedReplacementValue_1 == _test_LHPatchMemory_multiple_patches_target(), "Function didn't have expected retval after memory patch");
     
-    testFunctionForFuncHook();
+    uint32_t ops;
+    int replacementValue_2 = csops(getpid(), CS_OPS_STATUS, &ops, sizeof(uint32_t));
+    ASSERT(replacementValue_2 == expectedReplacementValue_2, "Function didn't have expected retval after memory patch");
+    ASSERT(ops == 0x12345678, "_csops ops didn't have expected value after memory patch");
+}
+
+__attribute__((aligned(0x4000)))
+int (*_test_LHFunctionHook__single_function_target_orig)(void);
+int _test_LHFunctionHook__single_function_target(void) { getpid(); return 1; }
+int _test_LHFunctionHook__single_function_replacement(void) { getpid(); return 2; }
+void test_LHFunctionHook__single_function(void) {
+    
+    int expectedOriginalValue = _test_LHFunctionHook__single_function_target();
+    int expectedReplacementValue = _test_LHFunctionHook__single_function_replacement();
+    ASSERT(expectedOriginalValue != expectedReplacementValue, "The target and replacement test functions have the same return value");
+    
     struct LHFunctionHook hooks[] = {
-        {&testFunctionForFuncHook, &replacementFunctionForHook, &origTestFunctionForFuncHook}
+        {&_test_LHFunctionHook__single_function_target, &_test_LHFunctionHook__single_function_replacement, &_test_LHFunctionHook__single_function_target_orig}
     };
-    LHHookFunctions(hooks, 1);
-    testFunctionForFuncHook();
+    int successfulHooks = LHHookFunctions(hooks, 1);
+    ASSERT(successfulHooks == 1, "LHHookFunctions failed");
+    ASSERT(_test_LHFunctionHook__single_function_target_orig != NULL, "Original function ptr is null");
+    
+    ASSERT(_test_LHFunctionHook__single_function_target() == expectedReplacementValue, "Function didn't return the expected value");
+    ASSERT(_test_LHFunctionHook__single_function_target_orig() == expectedOriginalValue, "The orig fp didn't return the expected value");
+}
+
+__attribute__((aligned(0x4000)))
+int (*_test_LHFunctionHook__double_hook_target1_orig)(void);
+int _test_LHFunctionHook__double_hook_target(void) { getpid(); return 3; }
+int _test_LHFunctionHook__double_hook_replacement1(void) { getpid(); return 4; }
+int _test_LHFunctionHook__double_hook_replacement2(void) { getpid(); return 5; }
+void test_LHFunctionHook__double_hook(void) {
+    
+    int expectedOriginalValue = _test_LHFunctionHook__double_hook_target();
+    int expectedReplacementValue1 = _test_LHFunctionHook__double_hook_replacement1();
+    int expectedReplacementValue2 = _test_LHFunctionHook__double_hook_replacement2();
+    ASSERT(expectedOriginalValue != expectedReplacementValue1 && expectedReplacementValue1 != expectedReplacementValue2 && expectedOriginalValue != expectedReplacementValue2, "Test functions have the same return value");
+    
+    struct LHFunctionHook hooks[] = {
+        {&_test_LHFunctionHook__double_hook_target, &_test_LHFunctionHook__double_hook_replacement1, &_test_LHFunctionHook__double_hook_target1_orig}
+    };
+    
+    int successfulHooks = LHHookFunctions(hooks, 1);
+    ASSERT(successfulHooks == 1, "LHHookFunctions failed on first hook");
+    ASSERT(_test_LHFunctionHook__double_hook_target1_orig != NULL, "Original function ptr is null after first hook");
+    
+    ASSERT(_test_LHFunctionHook__double_hook_target() == expectedReplacementValue1, "Function didn't return the expected value after first hook");
+    ASSERT(_test_LHFunctionHook__double_hook_target1_orig() == expectedOriginalValue, "The orig fp didn't return the expected value after the first hook");
     
     struct LHFunctionHook hooks2[] = {
-        {&testFunctionForFuncHook, &replacementFunctionForHook2, &origTestFunctionForFuncHook2}
+        {&_test_LHFunctionHook__double_hook_target, &_test_LHFunctionHook__double_hook_replacement2, &_test_LHFunctionHook__double_hook_target1_orig}
     };
-    LHHookFunctions(hooks2, 1);
-    testFunctionForFuncHook();
+    
+    successfulHooks = LHHookFunctions(hooks2, 1);
+    ASSERT(successfulHooks == 1, "LHHookFunctions failed on second hook");
+    ASSERT(_test_LHFunctionHook__double_hook_target1_orig != NULL, "Original function ptr is null after second hook");
+    
+    ASSERT(_test_LHFunctionHook__double_hook_target() == expectedReplacementValue2, "Function didn't return the expected value after second hook");
+    ASSERT(_test_LHFunctionHook__double_hook_target1_orig() == expectedReplacementValue1, "The orig fp didn't return the expected value after the second hook");
+}
+
+void tests(void){
+    
+    RUN_TEST(test_LHOpenImage);
+    RUN_TEST(test_LHFindSymbols__single_symbol_and_invoke);
+    RUN_TEST(test_LHFindSymbols__single_symbol);
+    RUN_TEST(test_LHFindSymbols__multiple_symbols);
+    RUN_TEST(test_getDyldCacheHeader);
+
+    RUN_TEST(test_LHPatchMemory_single_patch);
+    RUN_TEST(test_LHPatchMemory_multiple_patches);
+
+    RUN_TEST(test_LHFunctionHook__single_function);
+    RUN_TEST(test_LHFunctionHook__double_hook);
 }
 
 void (*origBadFunction)(void *ptr, void *ptr2);
