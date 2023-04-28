@@ -20,7 +20,7 @@ uint32_t assemble_mov(uint8_t sf, uint8_t op, uint8_t shift, uint8_t reg, uint16
     guardRetFalseDbgPanic(shift > (1 + sf * 2), "Invalid shift");
     
     uint32_t instruction = 0;
-    instruction |= (sf << 31);
+    instruction |= ((uint32_t)sf << 31);
     instruction |= (op << 29);
     instruction |= (0b100101 << 23);
     instruction |= (shift << 21);
@@ -57,7 +57,7 @@ uint32_t assemble_br(uint8_t op, uint8_t reg, uint8_t reg_pacmod, uint8_t pactyp
 #endif
     
     uint32_t instruction = 0;
-    instruction |= (0b1101011 << 25);
+    instruction |= ((uint32_t)0b1101011 << 25);
     instruction |= (z << 24);
     instruction |= (op << 21);
     instruction |= (0b11111 << 16);
@@ -250,7 +250,7 @@ uint32_t assemble_adrp(uint64_t pc, uint8_t reg, uint64_t target_page){
     uint32_t immhi = (uint32_t)(((imm >> 2) & 0x7ffff) << 5);
     
     uint32_t opcode = 0;
-    opcode |= (op << 31);
+    opcode |= ((uint32_t)op << 31);
     opcode |= immlo;
     opcode |= (0b10000 << 24);
     opcode |= immhi;
@@ -265,7 +265,7 @@ uint32_t assemble_add(uint8_t dst, uint8_t src, uint32_t imm12){
     guardRetFalseDbgPanic(src >= 31, "Invalid src register");
     
     uint32_t opcode = 0;
-    opcode |= (1 << 31);
+    opcode |= (UINT32_C(1) << 31);
     opcode |= (0b10001) << 24;
     opcode |= (imm12 << 10);
     opcode |= (src << 5);

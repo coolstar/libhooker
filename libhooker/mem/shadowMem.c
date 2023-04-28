@@ -69,6 +69,11 @@ bool LHWriteMemoryInternal(void *destination, const void *data, size_t size){
 LIBHOOKER_EXPORT int LHPatchMemory(const struct LHMemoryPatch *patches, int count){
     int successCount = 0;
     for (int i = 0; i < count; i++){
+        
+        if (patches[i].destination == NULL || patches[i].data == NULL || patches[i].size < 1) {
+            continue;
+        }
+
         if (LHWriteMemoryInternal(patches[i].destination, patches[i].data, patches[i].size))
             successCount++;
     }

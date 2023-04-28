@@ -370,7 +370,7 @@ privateFunc void new_dyld_debugger_notification(enum dyld_image_mode mode, uint3
 LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
     
     // Attempt dlopen() early to ensure the path exists and image is applicable for mapping before going further
-    void *imageHandle = dlopen(path, RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
+    void *imageHandle = dlopen(path, RTLD_NOW);
     if (!imageHandle) {
         libhooker_log("The image at path %s failed to open with error: %s\n", path, dlerror());
         return NULL;
@@ -471,7 +471,7 @@ LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
         if (loadCmd->cmd == LC_SEGMENT_64) {
             
             struct segment_command_64 *seg = (struct segment_command_64 *)loadCmd;
-            if (seg->fileoff == 0 && seg->filesize != 0) {
+            if (strcmp(seg->segname, "__TEXT") == 0 && seg->filesize != 0) {
                 slide = (uintptr_t)imageMachHeaderAddr - seg->vmaddr;
                 break;
             }
