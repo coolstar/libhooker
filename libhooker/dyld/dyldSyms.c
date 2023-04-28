@@ -42,8 +42,8 @@ privateFunc int dyldSharedCacheFd;
 privateFunc struct dyld_symbol_cache_info *dyldSymbolCacheInfo;
 privateFunc struct dyld_cache_local_symbols_entry_64 *dyldSharedCacheLocalSymEntry;
 
-dispatch_semaphore_t dyld_debugger_notif_sem;
-
+dispatch_semaphore_t _dyld_debugger_notif_sem;
+int _dyld_notification_hook_installed = 0;
 
 #if __LP64__
 #define LHnlist nlist_64
@@ -362,8 +362,8 @@ privateFunc bool findSymbols(const void *hdr,
 
 privateFunc void new_dyld_debugger_notification(enum dyld_image_mode mode, uint32_t infoCount, const struct dyld_image_info info[]) {
     // The image list is populated and ready to be used
-    if (dyld_debugger_notif_sem) {
-        dispatch_semaphore_signal(dyld_debugger_notif_sem);
+    if (_dyld_debugger_notif_sem) {
+        dispatch_semaphore_signal(_dyld_debugger_notif_sem);
     }
 }
 
@@ -403,28 +403,32 @@ LIBHOOKER_EXPORT struct libhooker_image *LHOpenImage(const char *path){
     if (imageInfos->infoArray == NULL) {
         
         // The image list has not been populated or is currently being modified. Setup to be notified when this is complete
-        dyld_debugger_notif_sem = dispatch_semaphore_create(0);
+        _dyld_debugger_notif_sem = dispatch_semaphore_create(0);
         
-        const char *dyldNames[1] = {
-            "__dyld_debugger_notification"
-        };
-        void *dyldSyms[1];
-        findSymbols(imageInfos->dyldImageLoadAddress, -1, dyldNames, dyldSyms, 1);
-        if (dyldSyms[0] == NULL) {
-            libhooker_log("imageInfos->infoArray is NULL and __dyld_debugger_notification could not be found.\n");
-            return NULL;
+        if (_dyld_notification_hook_installed == 0) {
+
+            const char *dyldNames[1] = {
+                "__dyld_debugger_notification"
+            };
+            void *dyldSyms[1];
+            findSymbols(imageInfos->dyldImageLoadAddress, -1, dyldNames, dyldSyms, 1);
+            if (dyldSyms[0] == NULL) {
+                libhooker_log("imageInfos->infoArray is NULL and __dyld_debugger_notification could not be found.\n");
+                return NULL;
+            }
+            
+            void *__dyld_debugger_notification = signPtr(dyldSyms[0]);
+            struct LHFunctionHook hooks[] = {
+                {__dyld_debugger_notification, &new_dyld_debugger_notification, NULL}
+            };
+            
+            if (LHHookFunctions(hooks, 1) == 1) {
+                _dyld_notification_hook_installed = 1;
+            }
         }
         
-        void *__dyld_debugger_notification = signPtr(dyldSyms[0]);
-        struct LHFunctionHook hooks[] = {
-            {__dyld_debugger_notification, &new_dyld_debugger_notification, NULL}
-        };
-        
-        LHHookFunctions(hooks, 1);
-        ((void (*)(enum dyld_image_mode, uint32_t, const struct dyld_image_info info[]))__dyld_debugger_notification)(dyld_image_adding, 0, NULL);
-        
         // Wait a small amount of time to see if dyld notifies of image build completion
-        dispatch_semaphore_wait(dyld_debugger_notif_sem, (dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC))));
+        dispatch_semaphore_wait(_dyld_debugger_notif_sem, (dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC))));
     }
     
     // Try to access the image infos list again. If it's still NULL, bail
